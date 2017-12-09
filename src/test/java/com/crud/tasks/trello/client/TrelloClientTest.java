@@ -7,6 +7,7 @@ import com.crud.tasks.trello.creator.AttachmentsByType;
 import com.crud.tasks.trello.creator.Badges;
 import com.crud.tasks.trello.creator.CreatedTrelloCard;
 import com.crud.tasks.trello.creator.Trello;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -90,5 +91,19 @@ public class TrelloClientTest {
         assertEquals("http://test.com", newCard.getShortUrl());
     }
 
+    @Test
+    public void shouldReturnEmptyList() throws URISyntaxException {
+        //Given
+        TrelloBoardDto[] trelloBoards = new TrelloBoardDto[1];
+        trelloBoards[0] = null;
+
+        URI uri = new URI("http://test.com/members/amadeuszzajac/boards?key=test&token=test&fields=name,id&lists=all");
+
+        when(restTemplate.getForObject(uri, TrelloBoardDto[].class)).thenReturn(trelloBoards);
+        //When
+        List<TrelloBoardDto> fetchedTrelloBoards = trelloClient.getTrelloBoards();
+        //Then
+        assertEquals(new TrelloBoardDto[0], fetchedTrelloBoards.get(0));
+    }
 
 }
