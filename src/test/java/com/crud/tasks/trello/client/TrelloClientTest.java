@@ -42,6 +42,7 @@ public class TrelloClientTest {
         when(trelloConfig.getTrelloApiEndpoint()).thenReturn("http://test.com");
         when(trelloConfig.getTrelloAppKey()).thenReturn("test");
         when(trelloConfig.getTrelloToken()).thenReturn("test");
+        when(trelloConfig.getTrelloUsername()).thenReturn("amadeuszzajac");
     }
 
     @Test
@@ -69,7 +70,6 @@ public class TrelloClientTest {
                 "Task task",
                 "Test Description",
                 "top",
-
                 "test_id"
         );
 
@@ -94,16 +94,13 @@ public class TrelloClientTest {
     @Test
     public void shouldReturnEmptyList() throws URISyntaxException {
         //Given
-        TrelloBoardDto[] trelloBoards = new TrelloBoardDto[1];
-        trelloBoards[0] = null;
-
+        TrelloBoardDto[] trelloBoards = null;
         URI uri = new URI("http://test.com/members/amadeuszzajac/boards?key=test&token=test&fields=name,id&lists=all");
 
         when(restTemplate.getForObject(uri, TrelloBoardDto[].class)).thenReturn(trelloBoards);
         //When
         List<TrelloBoardDto> fetchedTrelloBoards = trelloClient.getTrelloBoards();
         //Then
-        assertEquals(new TrelloBoardDto[0], fetchedTrelloBoards.get(0));
+        Assert.assertNotNull(fetchedTrelloBoards);
     }
-
 }
