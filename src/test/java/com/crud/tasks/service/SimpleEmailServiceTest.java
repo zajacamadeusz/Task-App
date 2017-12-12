@@ -50,6 +50,6 @@ public class SimpleEmailServiceTest {
         //When
         String cc = mail.getToCC();
         //Then
-        Assert.assertNull(cc);
+        Assert.assertEquals(null, cc);
     }
 }
