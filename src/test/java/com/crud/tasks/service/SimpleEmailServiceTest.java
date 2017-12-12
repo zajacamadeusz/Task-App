@@ -47,10 +47,9 @@ public class SimpleEmailServiceTest {
         mailMessage.setTo(mail.getMailTo());
         mailMessage.setSubject(mail.getSubject());
         mailMessage.setText(mail.getMessage());
-        mailMessage.setCc(mail.getToCC());
         //When
         String cc = mail.getToCC();
         //Then
-        Assert.assertEquals("", cc);
+        Assert.assertNull(cc);
     }
 }
