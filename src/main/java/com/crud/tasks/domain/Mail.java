@@ -17,8 +17,4 @@ public class Mail {
         this.subject = subject;
         this.message = message;
     }
-
-    public void setCc(String cc) {
-        this.toCC = cc;
-    }
 }
