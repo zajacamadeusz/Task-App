@@ -13,8 +13,6 @@ public class Mail {
     private String toCC;
 
     public Mail(String mailTo, String subject, String message) {
-        this.mailTo = mailTo;
-        this.subject = subject;
-        this.message = message;
+        this(mailTo, subject, message, null);
     }
 }
