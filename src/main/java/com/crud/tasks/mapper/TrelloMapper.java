@@ -24,14 +24,14 @@ public class TrelloMapper {
                 .collect(toList());
     }
 
-    private List<TrelloList> maptoList(final List<TrelloListDto> trelloListDto) {
+    public List<TrelloList> maptoList(final List<TrelloListDto> trelloListDto) {
         return trelloListDto.stream()
                 .map(trelloList -> new TrelloList(trelloList.getId(), trelloList.getName(),
                         trelloList.isClosed()))
                 .collect(toList());
     }
 
-    private List<TrelloListDto> maptoListDto(List<TrelloList> trelloLists) {
+    public List<TrelloListDto> maptoListDto(List<TrelloList> trelloLists) {
         return trelloLists.stream()
                 .map(trelloList -> new TrelloListDto(trelloList.getId(), trelloList.getName(),
                         trelloList.isClosed()))
