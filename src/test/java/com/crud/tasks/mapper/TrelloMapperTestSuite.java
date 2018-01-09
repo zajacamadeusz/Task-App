@@ -13,50 +13,10 @@ import static org.junit.Assert.assertEquals;
 
 
 @RunWith(MockitoJUnitRunner.class)
-public class MapperTestSuite {
+public class TrelloMapperTestSuite {
 
     @InjectMocks
     private TrelloMapper trelloMapper;
-    @InjectMocks
-    private TaskMapper taskMapper;
-
-    @Test
-    public void mapToTaskTest() {
-        //Given
-        TaskDto taskDto = new TaskDto(1L, "firstTitle", "firstContent");
-        //When
-        Task task = taskMapper.mapToTask(taskDto);
-        //Then
-        assertEquals(taskDto.getContent(), task.getContent());
-        assertEquals(taskDto.getId(), task.getId());
-        assertEquals(taskDto.getContent(), task.getContent());
-    }
-
-    @Test
-    public void mapToTaskDtoTest() {
-        //Given
-        Task task = new Task(1L, "firstTitle", "firstContent");
-        //When
-        TaskDto taskDto = taskMapper.mapToTaskDto(task);
-        //Then
-        assertEquals(task.getContent(), taskDto.getContent());
-        assertEquals(task.getId(), taskDto.getId());
-        assertEquals(task.getContent(), taskDto.getContent());
-    }
-
-    @Test
-    public void mapToTaskDtoListTest() {
-        //Given
-        List<Task> taskList = new ArrayList<>();
-        taskList.add(new Task(1L, "firstTitle", "firstContent"));
-        //When
-        List<TaskDto> tasksDtoList = taskMapper.mapToTaskDtoList(taskList);
-        //Then
-        assertEquals(taskList.get(0).getContent(), tasksDtoList.get(0).getContent());
-        assertEquals(taskList.get(0).getId(), tasksDtoList.get(0).getId());
-        assertEquals(taskList.get(0).getTitle(), tasksDtoList.get(0).getTitle());
-        assertEquals(taskList.size(), tasksDtoList.size());
-    }
 
     @Test
     public void mapToBoardsTest() {
