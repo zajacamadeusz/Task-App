@@ -24,6 +24,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(TaskController.class)
@@ -41,13 +43,13 @@ public class TaskControllerTestSuite {
     @Test
     public void shouldFetchTasks() throws Exception {
         //Given
-        List<Task> tasks = new ArrayList<>();
-        tasks.add(new Task(1L, "test_title", "test_content"));
-        tasks.add(new Task(2L, "test_title", "test_content"));
+        List<TaskDto> tasks = new ArrayList<>();
+        tasks.add(new TaskDto(1L, "test_title", "test_content"));
+        tasks.add(new TaskDto(2L, "test_title", "test_content"));
 
         when(dbService.getAllTasks()).thenReturn(tasks);
         //When & Then
-        mockMvc.perform(get("v1/tasks/getTasks").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/v1/task/getTasks").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].id", is(1L)))
@@ -58,6 +60,7 @@ public class TaskControllerTestSuite {
                 .andExpect(jsonPath("$[1].content", is("test_content")));
     }
 
+/*
     @Test
     public void getTaskTest() throws Exception {
         //Given
@@ -65,21 +68,37 @@ public class TaskControllerTestSuite {
 
         when(dbService.getTask(ArgumentMatchers.anyLong())).thenReturn(taskMapper.mapToTask(task));
         //When & Then
-        mockMvc.perform(get("v1/tasks/getTask").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/v1/task/getTask").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(1L)))
                 .andExpect(jsonPath("$.title", is("test_title")))
                 .andExpect(jsonPath("$.content", is("test_content")));
     }
+*/
 
     @Test
     public void shouldDeleteTask() throws Exception {
         //Given
         Task task = new Task(1L, "test_title", "test_content");
 
-        when(dbService.deleteTask(ArgumentMatchers.anyLong())).thenReturn(task);
         //When & Then
-        mockMvc.perform(delete("v1/tasks/deleteTask").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete("/v1/task//deleteTask").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(1L)))
+                .andExpect(jsonPath("$.title", is("test_title")))
+                .andExpect(jsonPath("$.content", is("test_content")));
+
+        verify(dbService, times(1)).deleteTask(task.getId());
+    }
+
+    @Test
+    public void shouldCreateTask() throws Exception {
+        //Given
+        Task task = new Task(1L, "test_title", "test_content");
+
+        when(dbService.saveTask(ArgumentMatchers.any(Task.class))).thenReturn(task);
+        //When & Then
+        mockMvc.perform(post("/v1/task//createTask").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(1L)))
                 .andExpect(jsonPath("$.title", is("test_title")))
@@ -87,16 +106,8 @@ public class TaskControllerTestSuite {
     }
 
     @Test
-    public void shouldSaveTask() throws Exception {
+    public void shouldUpdateTask() throws Exception {
         //Given
-        Task task = new Task(1L, "test_title", "test_content");
-
-        when(dbService.saveTask(ArgumentMatchers.any(Task.class))).thenReturn(task);
         //When & Then
-        mockMvc.perform(post("v1/tasks/createTask").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(1L)))
-                .andExpect(jsonPath("$.title", is("test_title")))
-                .andExpect(jsonPath("$.content", is("test_content")));
     }
 }
