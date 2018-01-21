@@ -18,8 +18,8 @@ public class EmailSchedulerTestSuite {
     @InjectMocks
     private EmailScheduler emailScheduler;
 
-//    @Mock
-//    private SimpleEmailService simpleEmailService;
+    @Mock
+    private SimpleEmailService simpleEmailService;
 
     @Mock
     private TaskRepository taskRepository;
@@ -37,6 +37,6 @@ public class EmailSchedulerTestSuite {
         //When
         emailScheduler.sendInformationEmail();
         //Then
-        verify(emailScheduler, times(1)).sendInformationEmail();
+        verify(simpleEmailService, times(1)).send(mail);
     }
 }
