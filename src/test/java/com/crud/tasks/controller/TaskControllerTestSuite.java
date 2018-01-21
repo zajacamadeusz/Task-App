@@ -10,7 +10,6 @@ import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,12 +21,10 @@ import java.util.Optional;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(TaskController.class)
@@ -65,36 +62,41 @@ public class TaskControllerTestSuite {
                 .andExpect(jsonPath("$[1].title", is("test_title")))
                 .andExpect(jsonPath("$[1].content", is("test_content")));
     }
-    // przy gecie moge stestowac 2 sciezki -> podaje id tego zmapowanego czy zwrocony zostal oczekiwany ten jeden task a
-    //drugi ten to zrobimy druga czesc ze serwis dbservice nei zwroic zadnego taska czyli zrobimy rzucenie wyjatku
-    // zeby zadziallalo nad wyjatkiem adnotacka
 
-
-    //wtedy status().isNotFound()
-    //parametr dodac tez przy gettask bo wywolujemy z parametrem
-
-/*
     @Test
     public void getTaskTest() throws Exception {
         //Given
-        Optional<TaskDto> task  = Optional.of(new TaskDto(1L, "test_title", "test_content"));
+        Optional<Task> task = Optional.of(new Task(1L, "test_title", "test_content"));
+        TaskDto taskDto = new TaskDto(1L, "test_title", "test_content");
 
-        when(dbService.getTask(ArgumentMatchers.anyLong())).thenReturn(taskMapper.mapToTask(task));
+        when(dbService.getTask(ArgumentMatchers.anyLong())).thenReturn(task);
+        when(taskMapper.mapToTaskDto(any())).thenReturn(taskDto);
         //When & Then
-        mockMvc.perform(get("/v1/task/getTask").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/v1/task/getTask")
+                .param("id", "1")
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(1L)))
+                .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.title", is("test_title")))
                 .andExpect(jsonPath("$.content", is("test_content")));
     }
-*/
+
+    @Test
+    public void getNotExistingTask() throws Exception {
+        //Given
+        //When & Then
+        mockMvc.perform(get("/v1/task/getTask")
+                .param("id", "1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+    }
 
     @Test
     public void shouldDeleteTask() throws Exception {
         //Given
-
         //When & Then
-        mockMvc.perform(delete("/v1/task//deleteTask")
+        mockMvc.perform(delete("/v1/task/deleteTask")
                 .param("id", "1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -106,21 +108,24 @@ public class TaskControllerTestSuite {
     public void shouldCreateTask() throws Exception {
         //Given
         Task task = new Task(1L, "test_title", "test_content");
+        TaskDto taskDto = new TaskDto(1L, "test_title", "test_content");
+
 
         when(dbService.saveTask(any(Task.class))).thenReturn(task);
+        when(taskMapper.mapToTaskDto(any())).thenReturn(taskDto);
         //When & Then
-        mockMvc.perform(post("/v1/task//createTask").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/v1/task/createTask")
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         //dorzucic contenta to co chcemy wyslac zmapowac do jsona i jako content wrzucic do content()
-        //zalezyc zy mockuje mappera czy nie
-        // wteyd muzse sprawdzic czys ie zmapowala
-        //
-        verify(dbService, times(1)).deleteTask(task.getId());
+        //zalezy czy mockuje mappera czy nie
+        // wtedy muszę sprawdzic czy sie zmapowala
+        verify(dbService, times(1)).saveTask(task);
     }
 
-    @Test
-    public void shouldUpdateTask() throws Exception {
-        //Given
-        //When & Then
-    }
+//    @Test
+//    public void shouldUpdateTask() throws Exception {
+//        //Given
+//        //When & Then
+//    }
 }
