@@ -28,12 +28,25 @@ public class EmailSchedulerTestSuite {
     private AdminConfig adminConfig;
 
     @Test
-    public void shouldSendInformationEmail() {
+    public void shouldSendInformationEmailAboutOneTask() {
         //Given
         when(taskRepository.count()).thenReturn(1L);
         when(adminConfig.getAdminMail()).thenReturn("zajacamadeusz7@gmail.com");
         Mail mail = new Mail("zajacamadeusz7@gmail.com", "Tasks: Once a day email",
-                "Currently in database you got: " + 1L);
+                "Currently in database you got: 1 task");
+        //When
+        emailScheduler.sendInformationEmail();
+        //Then
+        verify(simpleEmailService, times(1)).send(mail);
+    }
+
+    @Test
+    public void shouldSendInformationEmailAboutFewTasks() {
+        //Given
+        when(taskRepository.count()).thenReturn(5L);
+        when(adminConfig.getAdminMail()).thenReturn("zajacamadeusz7@gmail.com");
+        Mail mail = new Mail("zajacamadeusz7@gmail.com", "Tasks: Once a day email",
+                "Currently in database you got: 5 tasks");
         //When
         emailScheduler.sendInformationEmail();
         //Then
