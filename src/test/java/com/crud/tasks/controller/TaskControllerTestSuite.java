@@ -4,6 +4,7 @@ import com.crud.tasks.domain.Task;
 import com.crud.tasks.domain.TaskDto;
 import com.crud.tasks.mapper.TaskMapper;
 import com.crud.tasks.service.DbService;
+import com.google.gson.Gson;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
@@ -108,24 +109,44 @@ public class TaskControllerTestSuite {
     public void shouldCreateTask() throws Exception {
         //Given
         Task task = new Task(1L, "test_title", "test_content");
-        TaskDto taskDto = new TaskDto(1L, "test_title", "test_content");
-
 
         when(dbService.saveTask(any(Task.class))).thenReturn(task);
-        when(taskMapper.mapToTaskDto(any())).thenReturn(taskDto);
+        when(taskMapper.mapToTask(any())).thenReturn(task);
+
+        Gson gson = new Gson();
+        String jsonContent = gson.toJson(task);
         //When & Then
         mockMvc.perform(post("/v1/task/createTask")
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(jsonContent))
                 .andExpect(status().isOk());
-        //dorzucic contenta to co chcemy wyslac zmapowac do jsona i jako content wrzucic do content()
-        //zalezy czy mockuje mappera czy nie
-        // wtedy muszę sprawdzic czy sie zmapowala
+
         verify(dbService, times(1)).saveTask(task);
     }
 
-//    @Test
-//    public void shouldUpdateTask() throws Exception {
-//        //Given
-//        //When & Then
-//    }
+    @Test
+    public void shouldUpdateTask() throws Exception {
+        //Given
+        Task task = new Task(1L, "test_title", "test_content");
+        TaskDto taskDto = new TaskDto(1L, "test_title", "test_content");
+
+        when(dbService.saveTask(any(Task.class))).thenReturn(task);
+        when(taskMapper.mapToTask(any())).thenReturn(task);
+        when(taskMapper.mapToTaskDto(any())).thenReturn(taskDto);
+
+        Gson gson = new Gson();
+        String jsonContent = gson.toJson(task);
+        //When & Then
+        mockMvc.perform(put("/v1/task/updateTask")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(jsonContent))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.title", is("test_title")))
+                .andExpect(jsonPath("$.content", is("test_content")));
+
+        verify(dbService, times(1)).saveTask(task);
+    }
 }
