@@ -25,7 +25,8 @@ public class TrelloValidator {
     public List<TrelloBoard> validateTrelloBoards(final List<TrelloBoard> trelloBoards) {
         LOGGER.info("Starting filtering boards..");
         List<TrelloBoard> fiilteredBoards = trelloBoards.stream()
-                .filter(trelloBoard -> trelloBoard.getName().equalsIgnoreCase("test"))
+                // get Boards only with "test" in name:
+//                .filter(trelloBoard -> trelloBoard.getName().equalsIgnoreCase("test"))
                 .collect(toList());
         LOGGER.info("Boards has been filtered. Current list size: " + fiilteredBoards.size());
         return fiilteredBoards;
