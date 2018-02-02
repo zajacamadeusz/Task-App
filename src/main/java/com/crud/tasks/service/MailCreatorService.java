@@ -27,10 +27,10 @@ public class MailCreatorService {
 
     public String buildTrelloCardEmail(String message) {
 
-        List<String> functionalisty = new ArrayList<> ();
-        functionalisty.add ("You can manage your tasks");
-        functionalisty.add ("Provides connection with Trello Acount");
-        functionalisty.add ("Application allows sending tasks to Trello");
+        List<String> functionality = new ArrayList<> ();
+        functionality.add ("You can manage your tasks");
+        functionality.add ("Provides connection with Trello Acount");
+        functionality.add ("Application allows sending tasks to Trello");
 
         Context context = new Context();
         context.setVariable("message", message);
@@ -43,7 +43,7 @@ public class MailCreatorService {
         context.setVariable ("show_button", false);
         context.setVariable ("is_friend", true);
         context.setVariable ("admin_config", adminConfig);
-        context.setVariable ("application_functionality", functionalisty);
+        context.setVariable ("application_functionality", functionality);
         return templateEngine.process ("mail/created-trello-card-mail", context);
     }
 }
