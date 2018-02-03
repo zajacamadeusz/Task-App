@@ -36,11 +36,10 @@ public class MailCreatorService {
         context.setVariable("message", message);
         context.setVariable ("tasks_url", "http://localhost:8888/tasks_frontend/");
         context.setVariable ("button", "Visit website");
-        context.setVariable ("admin_name", adminConfig.getAdminMail ());
         context.setVariable ("company_name", companyConfig.getCompanyName ());
         context.setVariable ("company_goal", companyConfig.getCompanyGoal ());
         context.setVariable ("company_mail", companyConfig.getCompanyMail ());
-        context.setVariable ("show_button", false);
+        context.setVariable ("show_button", true);
         context.setVariable ("is_friend", true);
         context.setVariable ("admin_config", adminConfig);
         context.setVariable ("application_functionality", functionality);
